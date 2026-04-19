@@ -13,22 +13,30 @@
 
     <modules>
         <module>google-check</module>
+        <module>google-authenticator</module>
     </modules>
 
 
     <properties>
         <revision>0.0.1-SNAPSHOT</revision>
         <java.version>17</java.version>
-        <resource.delimiter>@</resource.delimiter>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+
+        <mate.version>0.2.8-SNAPSHOT</mate.version>
         <swagger2.version>2.7.0</swagger2.version>
         <spring-boot.version>3.4.0</spring-boot.version>
+        <mapstruct-plus.lombok.version>0.2.0</mapstruct-plus.lombok.version>
+        <mapstruct-plus.version>1.5.0</mapstruct-plus.version>
+        <therapi-javadoc.version>0.15.0</therapi-javadoc.version>
+        <lombok.version>1.18.42</lombok.version>
+        <knife4j.version>3.0.5</knife4j.version>
+
         <!--plugin version-->
-        <maven-compiler.version>3.8.1</maven-compiler.version>
-        <maven-source-plugin.version>3.0.0</maven-source-plugin.version>
         <maven-flatten-version>1.3.0</maven-flatten-version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     </properties>
 
 
@@ -38,6 +46,21 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--通过 import 将目标POM的dependencyManagement配置导入、合并到当前POM的dependencyManagement元素中-->
+            <dependency>
+                <groupId>com.mate.cloud</groupId>
+                <artifactId>mate-platform</artifactId>
+                <version>${mate.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.mate.cloud</groupId>
+                <artifactId>mate-bom</artifactId>
+                <version>${mate.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -51,18 +74,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <!--修改版本-->
-                    <version>${maven-source-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>${maven-source-plugin.version}</version>
+                    <version>${maven-compiler-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -73,18 +85,6 @@
                 <configuration>
                     <attach>true</attach>
                 </configuration>
-
-                <!-- 绑定source插件到Maven的生命周期,并在生命周期后执行绑定的source的goal -->
-                <executions>
-                    <execution>
-                        <!-- 绑定source插件到Maven的生命周期 -->
-                        <phase>compile</phase>
-                        <!--在生命周期后执行绑定的source插件的goals -->
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
