@@ -1,0 +1,94 @@
+server:
+  port: 8080
+
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    persistAuthorization: true
+  info:
+    title: 'SpringDoc API 文档 (SpringBoot 3.x)'
+    description: '基于JavaDoc的API文档系统'
+    version: '2.0.0'
+    contact:
+      name: lcz
+      email: 1926585708@qq.com
+      url: https://gitee.com/hsqyz
+  group-configs:
+    - group: '默认接口文档'
+      packages-to-scan: com.mate.cloud.googlecheck.controller
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:mate-mysql}:${MYSQL_PORT:3306}/${DB_NAME:learn}?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=false
+    #DB_USER就是环境变量
+    username: yxw01
+    password: yxw@123!
+  cache:
+    type: redis
+    # redis配置
+  data:
+    redis:
+      host: mate-redis
+      port: 6379
+      password: seata@user123
+# 单机配置
+singleServerConfig:
+  idleConnectionTimeout: 10000
+  connectTimeout: 10000
+  timeout: 5000
+  retryAttempts: 3
+  retryInterval: 1500
+  password: ${spring.data.redis.password}
+  subscriptionsPerConnection: 5
+  clientName: null
+  address: "redis://${spring.data.redis.host}:${spring.data.redis.port}"
+  subscriptionConnectionMinimumIdleSize: 1
+  subscriptionConnectionPoolSize: 50
+  connectionMinimumIdleSize: 32
+  connectionPoolSize: 100
+  database: 3
+
+# mybatis-plus 配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  #  type-handlers-package: com.mate.cloud.mybatis.handler
+  global-config:
+    #关闭banner
+    banner: false
+    db-config:
+      id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true # 驼峰转换
+    # 配置日志，我们所用的sql现在是不可见的，我们希望知道他是怎么执行的，所以我们必须要查看日志！
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+application:
+  google:
+    enabled: true  # 总开关：是否启用谷歌验证
+    register: /user/register
+    login: /user/login
+    verify: /user/enableGoogle
+
+# 自定义Security配置
+security:
+  # 免token校验的接口（白名单）
+  ignore:
+    # 是否启用CORS跨域支持
+    enabled: true
+    # 格式：{HTTP方法}: [接口列表]
+    # 支持 GET/POST/PUT/DELETE/*（*代表所有方法）
+    urls:
+      POST: ["/user/login", "/user/register","/user/refresh-token","/user/logout"]
+      GET: []  # 示例：刷新Token
+      "*": ["/actuator/health"]  # 示例：健康检查接口（所有方法）
+
+logging:
+  level:
+    org.springdoc: DEBUG
+    org.springframework.web: DEBUG
